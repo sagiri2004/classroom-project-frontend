@@ -5,7 +5,7 @@ function App() {
 
   return (
     <Box>
-      <h1>Hello, world!</h1>
+      <h1>"Yahallo"</h1>
       <SelectTheme />
     </Box>
   )
