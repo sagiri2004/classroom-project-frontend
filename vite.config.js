@@ -11,4 +11,17 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "~", replacement: "/src" }],
   },
+
+  esbuild: {
+    loader: 'jsx',
+    include: /.*\.jsx?$/,
+    exclude: []
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
 });

@@ -1,14 +1,41 @@
-import SelectTheme from "~/components/SelectTheme"
-import { Box } from "@mui/material"
+import { Fragment } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { publicRoutes } from "./routes";
+import Default from "~/layouts/Default";
 
 function App() {
-
   return (
-    <Box>
-      <h1>"Yahallo"</h1>
-      <SelectTheme />
-    </Box>
-  )
+    <Router>
+      <div className="App">
+        <Routes>
+          {publicRoutes.map((route, index) => {
+            let Layout = Default;
+
+            if (route.layout) {
+              Layout = route.layout;
+            } else if (route.layout === null) {
+              Layout = Fragment;
+            }
+
+            const Page = route.component;
+
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+                exact={route.exact}
+              />
+            );
+          })}
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
