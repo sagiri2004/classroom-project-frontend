@@ -4,23 +4,19 @@ import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(),
-    svgr()
-  ],
-
+  plugins: [react(), svgr()],
   resolve: {
     alias: [{ find: "~", replacement: "/src" }],
   },
-
   esbuild: {
-    loader: 'jsx',
+    loader: "jsx",
     include: /.*\.jsx?$/,
-    exclude: []
+    exclude: [],
   },
   optimizeDeps: {
     esbuildOptions: {
       loader: {
-        '.js': 'jsx',
+        ".js": "jsx",
       },
     },
   },

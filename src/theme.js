@@ -1,9 +1,34 @@
 // theme.js
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 
+
+const HEADER_HEIGHT = "56px";
+const MAIN_CONTENT_HEIGHT = `calc(100vh - ${HEADER_HEIGHT})`;
+
+
 // Tạo theme với các tùy chỉnh cho light và dark mode
 const theme = extendTheme({
+  custom: {
+    headerHeight: HEADER_HEIGHT,
+    mainContentHeight: MAIN_CONTENT_HEIGHT,
+  },
 
+  colorSchemes: {
+    light: {
+      palette: {
+        "bg-header": "#FFFFFF",
+        "bg-main": "#F0F2F5",
+      },
+    },
+    dark: {
+      palette: {
+        "bg-header": "#242526",
+        "bg-main": "#18191A",
+      },
+    },
+  },
+
+  // Tùy chỉnh scrollbar cho light và dark mode
   components: {
     MuiCssBaseline: {
       styleOverrides: {
