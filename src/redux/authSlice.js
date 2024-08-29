@@ -9,11 +9,6 @@ const authSlice = createSlice({
       error: false,
       loading: false,
     },
-    profile: {
-      error: false,
-      loading: false,
-      currentProfile: null,
-    },
   },
   reducers: {
     loginStart: (state) => {
@@ -32,29 +27,9 @@ const authSlice = createSlice({
       state.login.loading = false;
       state.login.error = true;
     },
-    getProfileStart: (state) => {
-      state.profile.loading = true;
-      state.profile.error = false;
-    },
-    getProfileSuccess: (state, action) => {
-      state.profile.currentProfile = action.payload.data;
-      state.profile.loading = false;
-      state.profile.error = false;
-    },
-    getProfileError: (state) => {
-      state.profile.loading = false;
-      state.profile.error = true;
-    },
   },
 });
 
-export const {
-  loginStart,
-  loginSuccess,
-  loginError,
-  getProfileError,
-  getProfileStart,
-  getProfileSuccess,
-} = authSlice.actions;
+export const { loginStart, loginSuccess, loginError } = authSlice.actions;
 
 export default authSlice.reducer;
