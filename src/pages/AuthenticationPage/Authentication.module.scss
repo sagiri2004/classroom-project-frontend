@@ -2,6 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
     background: linear-gradient(120deg, #112466, #86b4e3);
 }
@@ -36,4 +37,11 @@
 
 .form {
     flex: 1;
+}
+
+.back {
+    display: flex;
+    // sang trai 
+    justify-content: flex-start;
+    width: 65%;
 }

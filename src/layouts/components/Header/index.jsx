@@ -15,7 +15,6 @@ import {
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -25,15 +24,20 @@ import LogoIcon from "~/assets/images/logo.svg?react";
 import ContrastIcon from "@mui/icons-material/Contrast";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useColorScheme } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "~/api/userApi";
 
 function Header() {
-  const user = false;
-
+  // check user trong redux login currentUser
+  const user = useSelector((state) => state?.auth?.login.currentUser);
   const [anchorEl, setAnchorEl] = useState(null);
   const [subAnchorEl, setSubAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isSubMenuOpen = Boolean(subAnchorEl);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { mode, setMode } = useColorScheme();
 
@@ -58,6 +62,11 @@ function Header() {
     const modeValue = event.currentTarget.getAttribute("value");
     setMode(modeValue);
     handleSubMenuClose();
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    logoutUser(dispatch, navigate);
   };
 
   const menuId = "primary-search-account-menu";
@@ -99,18 +108,9 @@ function Header() {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <MenuItem onClick={handleMenuClose}>
-        <Avatar /> Profile
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <Avatar /> My account
+        <Avatar /> {user?.username}
       </MenuItem>
       <Divider />
-      <MenuItem onClick={handleMenuClose}>
-        <ListItemIcon>
-          <PersonAdd fontSize="small" />
-        </ListItemIcon>
-        Add another account
-      </MenuItem>
       <MenuItem onClick={handleMenuClose}>
         <ListItemIcon>
           <Settings fontSize="small" />
@@ -123,7 +123,7 @@ function Header() {
         </ListItemIcon>
         Theme
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={handleLogout}>
         <ListItemIcon>
           <Logout fontSize="small" />
         </ListItemIcon>

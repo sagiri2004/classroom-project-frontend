@@ -1,5 +1,12 @@
 import apiClient from "./apiClient";
-import { loginStart, loginError, loginSuccess } from "~/redux/authSlice";
+import {
+  loginStart,
+  loginError,
+  loginSuccess,
+  logoutStart,
+  logoutSuccess,
+  logoutError,
+} from "~/redux/authSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
@@ -15,9 +22,22 @@ export const loginUser = async (user, dispatch, navigate) => {
 
 export const registerUser = async (user, navigate) => {
   try {
-    await apiClient.post("/register", user);
+    const response = await apiClient.post("/register", user);
+    console.log(response);
     navigate("/");
   } catch (error) {
     console.error("Register error:", error); // Thêm log lỗi để kiểm tra
+  }
+};
+
+export const logoutUser = async (dispatch, navigate) => {
+  dispatch(logoutStart());
+  try {
+    await apiClient.post("/logout");
+    dispatch(logoutSuccess());
+    navigate("/");
+  } catch (error) {
+    console.error("Logout error:", error); // Thêm log lỗi để kiểm tra
+    dispatch(logoutError());
   }
 };
