@@ -11,7 +11,7 @@ import {
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
   try {
-    const response = await apiClient.post("/login", user);
+    const response = await apiClient.post("/auth/login", user);
     dispatch(loginSuccess(response.data.data));
     navigate("/");
   } catch (error) {
@@ -22,7 +22,7 @@ export const loginUser = async (user, dispatch, navigate) => {
 
 export const registerUser = async (user, navigate) => {
   try {
-    const response = await apiClient.post("/register", user);
+    const response = await apiClient.post("/auth/register", user);
     console.log(response);
     navigate("/");
   } catch (error) {
@@ -33,7 +33,7 @@ export const registerUser = async (user, navigate) => {
 export const logoutUser = async (dispatch, navigate) => {
   dispatch(logoutStart());
   try {
-    await apiClient.post("/logout");
+    await apiClient.post("/auth/logout");
     dispatch(logoutSuccess());
     navigate("/");
   } catch (error) {

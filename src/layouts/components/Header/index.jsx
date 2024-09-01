@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -76,6 +75,7 @@ function Header() {
       id={menuId}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      sx={{ zIndex: 1000 }}
       slotProps={{
         paper: {
           elevation: 0,
@@ -108,7 +108,14 @@ function Header() {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <MenuItem onClick={handleMenuClose}>
-        <Avatar /> {user?.username}
+        <Avatar
+          alt={user?.id}
+          src={user?.profile?.avatar}
+          sx={{ width: "48px", height: "48px" }}
+        />
+        <Typography variant="subtitle1" noWrap>
+          {user?.profile?.firstName} {user?.profile?.lastName}
+        </Typography>
       </MenuItem>
       <Divider />
       <MenuItem onClick={handleMenuClose}>
@@ -198,10 +205,11 @@ function Header() {
         height: (theme) => theme.custom.headerHeight,
         width: "100%",
         padding: 2,
+        position: "fixed",
         zIndex: 1000,
-        position: "sticky",
         py: 1,
         px: 3,
+        paddingLeft: 10,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -277,8 +285,17 @@ function Header() {
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
             color="inherit"
+            sx={{
+              p: "8px",
+              px: "12px",
+            }}
           >
-            <AccountCircle />
+            {/* Avatar user */}
+            <Avatar
+              alt={user?.id}
+              src={user?.profile?.avatar}
+              sx={{ width: "40px", height: "40px" }}
+            />
           </IconButton>
           {renderMenu}
           {renderSubMenu}
