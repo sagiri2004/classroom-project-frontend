@@ -1,62 +1,41 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
+
 import Header from "./Header";
 import Flashcard from "./Flashcard";
 import Footer from "./Footer";
 
-// demo data flashcards
-const flashcardsData = {
-  _id: "flashcards-id-01",
-  title: "Flashcards",
-  description: "Learn English with Flashcards",
-  flashcardOrderIds: ["flashcard-id-01", "flashcard-id-02", "flashcard-id-03"],
-  flashcards: [
-    {
-      _id: "flashcard-id-01",
-      word: "Apple",
-      definition: "Quả táo",
-    },
-    {
-      _id: "flashcard-id-02",
-      word: "Banana",
-      definition: "Quả chuối",
-    },
-    {
-      _id: "flashcard-id-03",
-      word: "Orange",
-      definition: "Quả cam",
-    },
-  ],
-};
+function IntroFlashcards({ flashcardSet = {}, orderedFlashcards = [] }) {
+  const [flashcards, setFlashcards] = useState(orderedFlashcards);
 
-function IntroFlashcards() {
-  // lấy ra danh sách flashcards
-  const [flashcards, setFlashcards] = useState(flashcardsData.flashcards);
-  // lấy ra flashcard hiện tại
+  useEffect(() => {
+    if (orderedFlashcards && Array.isArray(orderedFlashcards)) {
+      setFlashcards(orderedFlashcards);
+    }
+  }, [orderedFlashcards]);
+
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
   const currentFlashcard = flashcards[currentFlashcardIndex];
+  const [isFlipped, setIsFlipped] = useState(false);
 
-  // chuyển sang flashcard tiếp theo
   const handleNextFlashcard = () => {
     if (currentFlashcardIndex < flashcards.length - 1) {
       setCurrentFlashcardIndex(currentFlashcardIndex + 1);
+      setIsFlipped(false);
     }
   };
 
-  // chuyển sang flashcard trước đó
   const handlePrevFlashcard = () => {
     if (currentFlashcardIndex > 0) {
       setCurrentFlashcardIndex(currentFlashcardIndex - 1);
+      setIsFlipped(false);
     }
   };
 
-  // xoay flashcard
-  const [isFlipped, setIsFlipped] = useState(false);
   const handleFlip = () => {
-    setIsFlipped(!isFlipped);
+    setIsFlipped((prevState) => !prevState);
   };
 
-  // nghe sự kiện từ bàn phím
   const handleKeyDown = (e) => {
     switch (e.key) {
       case "ArrowRight":
@@ -66,15 +45,10 @@ function IntroFlashcards() {
         handlePrevFlashcard();
         break;
       case " ":
-        handleFlip();
-        break;
       case "ArrowUp":
-        handleFlip();
-        break;
       case "ArrowDown":
         handleFlip();
         break;
-
       default:
         break;
     }
@@ -96,8 +70,8 @@ function IntroFlashcards() {
       }}
     >
       <Header
-        title={flashcardsData.title}
-        description={flashcardsData.description}
+        title={flashcardSet?.title}
+        description={flashcardSet?.description}
       />
       <Box
         sx={{

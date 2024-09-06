@@ -19,7 +19,7 @@ import {
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import { loginUser } from "~/api/userApi";
+import { loginUser } from "~/redux/authSlice";
 import ForgotPassword from "./ForgotPassword";
 
 function LoginForm({ handleToggle }) {
@@ -50,13 +50,26 @@ function LoginForm({ handleToggle }) {
     event.preventDefault();
   };
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
     const user = {
       username: username,
       password: password,
     };
-    loginUser(user, dispatch, navigate);
+
+    try {
+      const result = await dispatch(loginUser(user));
+
+      console.log("Login result:", result);
+
+      if (loginUser.fulfilled.match(result)) {
+        navigate("/");
+      } else {
+        console.error("Failed to login:", result.payload);
+      }
+    } catch (error) {
+      console.error("Failed to login:", error);
+    }
   };
 
   return (

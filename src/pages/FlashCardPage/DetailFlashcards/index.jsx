@@ -5,34 +5,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import MiniFlashcard from "./MiniFlashcard";
 import { calculateTimeSince } from "~/utils/timeUtils";
 
-// demo data flashcards
-const flashcardsData = {
-  _id: "flashcards-id-01",
-  title: "Flashcards",
-  userId: "2",
-  description: "Learn English with Flashcards",
-  flashcardOrderIds: ["flashcard-id-01", "flashcard-id-02", "flashcard-id-03"],
-  createdAt: "2021-12-01T00:00:00.000Z",
-  updatedAt: "2021-12-01T00:00:00.000Z",
-  flashcards: [
-    {
-      _id: "flashcard-id-01",
-      word: "Apple",
-      definition: "Quả táo",
-    },
-    {
-      _id: "flashcard-id-02",
-      word: "Banana",
-      definition: "Quả chuối",
-    },
-    {
-      _id: "flashcard-id-03",
-      word: "Orange",
-      definition: "Quả cam",
-    },
-  ],
-};
-
 // demo data user
 const user = {
   id: 2,
@@ -46,7 +18,7 @@ const user = {
   },
 };
 
-function DetailFlashcards() {
+function DetailFlashcards({ orderedFlashcards = [], createdAt }) {
   return (
     <Box
       sx={{
@@ -73,7 +45,7 @@ function DetailFlashcards() {
         >
           <IconButton>
             <Avatar
-              alt={user.id}
+              alt="123"
               src={user.profile.avatar}
               sx={{ width: "48px", height: "48px" }}
             />
@@ -86,7 +58,7 @@ function DetailFlashcards() {
               {user.profile.firstName} {user.profile.lastName}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Created {calculateTimeSince(flashcardsData.createdAt)} ago
+              Created {calculateTimeSince(createdAt)} ago
             </Typography>
           </Box>
         </Box>
@@ -108,7 +80,7 @@ function DetailFlashcards() {
       </Paper>
 
       <Typography fontWeight="600" fontSize="1.5rem">
-        Terms in this set ({flashcardsData.flashcards.length})
+        Terms in this set ({orderedFlashcards.length})
       </Typography>
       
       <Box
@@ -118,8 +90,8 @@ function DetailFlashcards() {
           gap: 2,
         }}
       >
-        {flashcardsData.flashcards.map((flashcard) => (
-          <MiniFlashcard key={flashcard._id} flashcard={flashcard} />
+        {orderedFlashcards.map((flashcard) => (
+          <MiniFlashcard key={flashcard.id} flashcard={flashcard} />
         ))}
       </Box>
     </Box>

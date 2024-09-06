@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import {
   Box,
@@ -17,7 +18,7 @@ import {
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-import { registerUser } from "~/api/userApi";
+import { registerUser } from "~/redux/authSlice";
 
 function SignUpForm({ handleToggle }) {
   const [username, setUsername] = useState("");
@@ -27,6 +28,7 @@ function SignUpForm({ handleToggle }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -38,7 +40,7 @@ function SignUpForm({ handleToggle }) {
     event.preventDefault();
   };
 
-  const handleSignUp = (event) => {
+  const handleSignUp = async (event) => {
     event.preventDefault();
     const user = {
       username: username,
@@ -49,7 +51,18 @@ function SignUpForm({ handleToggle }) {
       console.log("Passwords do not match");
       return;
     }
-    registerUser(user, navigate);
+
+    try {
+      const result = await dispatch(registerUser(user));
+
+      if (result) {
+        navigate("/");
+      }
+
+      console.log("Register result:", result);
+    } catch (error) {
+      console.log("Register error:", error.message ? error.message : error);
+    }
   };
 
   return (

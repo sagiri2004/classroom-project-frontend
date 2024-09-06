@@ -22,10 +22,11 @@ import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import LogoIcon from "~/assets/images/logo.svg?react";
 import ContrastIcon from "@mui/icons-material/Contrast";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 import { useColorScheme } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logoutUser } from "~/api/userApi";
+import { logoutUser } from "~/redux/authSlice";
 
 function Header() {
   // check user trong redux login currentUser
@@ -65,7 +66,7 @@ function Header() {
 
   const handleLogout = () => {
     setAnchorEl(null);
-    logoutUser(dispatch, navigate);
+    dispatch(logoutUser(navigate));
   };
 
   const menuId = "primary-search-account-menu";
@@ -109,9 +110,9 @@ function Header() {
     >
       <MenuItem onClick={handleMenuClose}>
         <Avatar
-          alt={user?.id}
+          alt="123"
           src={user?.profile?.avatar}
-          sx={{ width: "48px", height: "48px" }}
+          sx={{ width: "32px", height: "32px" }}
         />
         <Typography variant="subtitle1" noWrap>
           {user?.profile?.firstName} {user?.profile?.lastName}
@@ -292,7 +293,7 @@ function Header() {
           >
             {/* Avatar user */}
             <Avatar
-              alt={user?.id}
+              alt="Remy Sharp"
               src={user?.profile?.avatar}
               sx={{ width: "40px", height: "40px" }}
             />

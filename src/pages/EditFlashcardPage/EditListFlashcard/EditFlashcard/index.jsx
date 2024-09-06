@@ -2,7 +2,11 @@ import { Paper, Typography } from "@mui/material";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { useEffect, useState } from "react";
+import { debounce } from "lodash";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { updateFlashcardSet, deleteFlashcard } from "~/redux/flashcardSetSlide";
 
 import {
   Box,
@@ -14,9 +18,82 @@ import {
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-function EditFlashcard({ id = "", flashcard }) {
+function EditFlashcard({ flashcard, flashcardSetId, rank }) {
   const [word, setWord] = useState(flashcard.word);
   const [definition, setDefinition] = useState(flashcard.definition);
+
+  const initialWord = useRef(flashcard.word);
+  const initialDefinition = useRef(flashcard.definition);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setWord(flashcard.word);
+    setDefinition(flashcard.definition);
+
+    initialWord.current = flashcard.word;
+    initialDefinition.current = flashcard.definition;
+  }, [flashcard.word, flashcard.definition]);
+
+  const debouncedUpdateFlashcard = useCallback(
+    debounce((word, definition) => {
+      if (
+        word !== initialWord.current ||
+        definition !== initialDefinition.current
+      ) {
+        if (word !== undefined && definition !== undefined) {
+          // chi truyen nhung truong thay doi
+          if (
+            word !== initialWord.current &&
+            definition === initialDefinition.current
+          ) {
+            dispatch(
+              updateFlashcardSet({
+                setId: flashcardSetId,
+                cardId: flashcard._id || flashcard.id,
+                word,
+              })
+            );
+          }
+          if (
+            definition !== initialDefinition.current &&
+            word === initialWord.current
+          ) {
+            dispatch(
+              updateFlashcardSet({
+                setId: flashcardSetId,
+                cardId: flashcard._id || flashcard.id,
+                definition,
+              })
+            );
+          }
+          if (
+            word !== initialWord.current &&
+            definition !== initialDefinition.current
+          ) {
+            dispatch(
+              updateFlashcardSet({
+                setId: flashcardSetId,
+                cardId: flashcard._id || flashcard.id,
+                word,
+                definition,
+              })
+            );
+          }
+        }
+      }
+    }, 5000),
+    [dispatch]
+  );
+
+  useEffect(() => {
+    debouncedUpdateFlashcard(word, definition);
+
+    return () => {
+      debouncedUpdateFlashcard.cancel();
+    };
+  }, [word, definition, debouncedUpdateFlashcard]);
+
   const {
     attributes,
     listeners,
@@ -26,7 +103,13 @@ function EditFlashcard({ id = "", flashcard }) {
     isDragging,
   } = useSortable({
     id: flashcard._id,
-    data: { ...flashcard },
+    // data: { ...flashcard },
+    data: {
+      ...flashcard,
+      word,
+      definition,
+      rank,
+    },
   });
 
   const style = {
@@ -49,7 +132,6 @@ function EditFlashcard({ id = "", flashcard }) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
     >
       <Box
         sx={{
@@ -57,13 +139,16 @@ function EditFlashcard({ id = "", flashcard }) {
           justifyContent: "space-between",
         }}
       >
-        <Typography>{id}</Typography>
+        <Typography>{rank}</Typography>
         <Box>
           <IconButton
             sx={{
               height: "30px",
               width: "30px",
             }}
+            {...listeners}
+            // không cho kéo thả khi dữ liệu trống ở word và definition
+            disabled={word === "" || definition === ""}            
           >
             <DragHandleIcon />
           </IconButton>
@@ -71,6 +156,10 @@ function EditFlashcard({ id = "", flashcard }) {
             sx={{
               height: "30px",
               width: "30px",
+            }}
+            onClick={() => {
+              // Xóa flashcard
+              dispatch(deleteFlashcard(flashcard._id || flashcard.id));
             }}
           >
             <DeleteIcon />

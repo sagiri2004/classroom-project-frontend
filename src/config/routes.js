@@ -2,8 +2,8 @@ const routes = {
   home: "/",
   login: "/login",
   signup: "/signup",
-  flashCard: "/flash-card",
-  edit: "/edit",
+  flashCards: "/flashcards/:id",
+  edit: "/flashcards/:id/edit",
 };
 
 export default routes;

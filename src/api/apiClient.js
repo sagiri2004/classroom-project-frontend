@@ -1,6 +1,6 @@
 import axios from "axios";
-import { store } from "~/redux/store"; // Đảm bảo bạn đã export store trong file store.js của bạn
-import { logoutSuccess, loginSuccess } from "~/redux/authSlice";
+import { store } from "~/redux/store";
+import { logoutUser, refreshToken } from "~/redux/authSlice"; // Import async thunks cho logout và refresh token
 
 const apiClient = axios.create({
   baseURL: "http://localhost:6969/api",
@@ -12,7 +12,6 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    // Truy cập state từ store trực tiếp
     const state = store.getState();
     const token = state?.auth?.login.accessToken;
 
@@ -32,25 +31,42 @@ apiClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response && error.response.status === 403) {
-      console.log("Request failed with status code 403, please login again");
-      store.dispatch(logoutSuccess());
-      window.location.href = "/login";
-    } else if (error.response && error.response.status === 401) {
-      console.log("Request failed with status code 401, refreshing token...");
-      try {
-        const response = await apiClient.get("/auth/refresh-token");
-        const { accessToken } = response.data.data;
-        console.log("New access token:", accessToken);
-        store.dispatch(loginSuccess({ accessToken }));
-        error.config.headers.Authorization = `Bearer ${accessToken}`;
-        return apiClient.request(error.config);
-      } catch (refreshError) {
-        console.error("Failed to refresh token:", refreshError);
-        store.dispatch(logoutSuccess());
+    const originalRequest = error.config;
+
+    if (error.response) {
+      if (error.response.status === 403) {
+        console.log("Request failed with status code 403, please login again");
+
+        store.dispatch(logoutUser());
         window.location.href = "/login";
+        return Promise.reject(error);
+      } 
+      
+      else if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true; // Đánh dấu để ngăn chặn vòng lặp vô hạn
+        console.log("Request failed with status code 401, refreshing token...");
+
+        try {
+          const refreshResponse = await store.dispatch(refreshToken());
+
+          if (refreshResponse.payload?.accessToken) {
+            const newAccessToken = refreshResponse.payload.accessToken;
+            console.log("New access token:", newAccessToken);
+
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+            return apiClient(originalRequest);
+          }
+        } catch (refreshError) {
+          console.error("Failed to refresh token:", refreshError);
+
+          store.dispatch(logoutUser());
+          window.location.href = "/login";
+          return Promise.reject(refreshError);
+        }
       }
     }
+    
     return Promise.reject(error);
   }
 );
