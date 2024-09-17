@@ -10,8 +10,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import HomeIcon from "@mui/icons-material/Home";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
+import SchoolIcon from "@mui/icons-material/School";
 
 const openedMixin = (theme) => ({
   width: theme.custom.drawerWidthMax,
@@ -74,6 +75,16 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [currentUrl, setCurrentUrl] = React.useState(null);
+
+  React.useEffect(() => {
+    setCurrentUrl(window.location.pathname);
+  }, []);
+
+  const handleListItemClick = (url) => {
+    // tai lai trang
+    window.location.href = url;
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,52 +118,24 @@ export default function MiniDrawer() {
         )}
       </DrawerHeader>
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
+        {["Home", "Library", "Class"].map((text, index) => (
           <ListItem key={text} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={[
-                {
-                  minHeight: 48,
-                  px: 2.5,
-                },
-                open
-                  ? {
-                      justifyContent: "initial",
-                    }
-                  : {
-                      justifyContent: "center",
-                    },
-              ]}
-            >
-              <ListItemIcon
-                sx={[
-                  {
-                    minWidth: 0,
-                    justifyContent: "center",
-                  },
-                  open
-                    ? {
-                        mr: 3,
-                      }
-                    : {
-                        mr: "auto",
-                      },
-                ]}
-              >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            <ListItemButton>
+              <ListItemIcon>
+                {index === 0 && <HomeIcon 
+                  color={currentUrl === "/" ? "primary" : "inherit"}
+                  onClick={() => handleListItemClick("/")}
+                />}
+                {index === 1 && <FolderSharedIcon
+                  color={currentUrl === "/library" ? "primary" : "inherit"}
+                  onClick={() => handleListItemClick("/library")}
+                 />}
+                {index === 2 && <SchoolIcon
+                  color={currentUrl === "/class" ? "primary" : "inherit"}
+                  onClick={() => handleListItemClick("/class")}
+                 />}
               </ListItemIcon>
-              <ListItemText
-                primary={text}
-                sx={[
-                  open
-                    ? {
-                        opacity: 1,
-                      }
-                    : {
-                        opacity: 0,
-                      },
-                ]}
-              />
+              <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}

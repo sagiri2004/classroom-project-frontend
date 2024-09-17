@@ -57,7 +57,16 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     login: {
-      currentUser: null,
+      currentUser: {
+        id: null,
+        username: null,
+        email: null,
+        profile: {
+          firstName: null,
+          lastName: null,
+          avatar: null,
+        },
+      },
       accessToken: null,
       error: null,
       loading: false,
@@ -71,8 +80,14 @@ const authSlice = createSlice({
       loading: false,
     },
   },
-  reducers: {},
-  extraReducers: (builder) => {
+  reducers: {
+    updateUser: (state, action) => {
+      state.login.currentUser.profile.firstName = action.payload.firstName;
+      state.login.currentUser.profile.lastName = action.payload.lastName;
+      state.login.currentUser.profile.avatar = action.payload.avatar;
+    },
+  },
+  extraReducers: (builder) => { 
     builder
       // Đăng nhập
       .addCase(loginUser.pending, (state) => {
@@ -121,5 +136,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const { updateUser } = authSlice.actions;
 
 export default authSlice.reducer;

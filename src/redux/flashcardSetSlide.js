@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "~/api/apiClient";
-import { current } from "immer";
 
 const initialState = {
   data: {

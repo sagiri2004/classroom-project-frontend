@@ -46,42 +46,74 @@ const theme = extendTheme({
             width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
             height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
           },
-    
+
           // Ẩn thanh cuộn mặc định
           "&::-webkit-scrollbar": {
             width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
             height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
           },
-    
+
           "&::-webkit-scrollbar-thumb": {
             backgroundColor: "#d66efd",
             borderRadius: "50px",
             backgroundImage: "#242526",
           },
-    
 
+          // chỉnh scrollbar cho MuiDialogContent-root
+          "& .MuiDialogContent-root": {
+            overflow: "auto",
+            "&::-webkit-scrollbar": {
+              width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
+              height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
+            },
+            // Ẩn thanh cuộn mặc định
+            "&::-webkit-scrollbar": {
+              width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
+              height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#d66efd",
+              borderRadius: "50px",
+              backgroundImage: "#242526",
+            },
+          },
         },
         // Tùy chỉnh cho dark mode
         '*[data-mui-color-scheme="dark"]': {
           // Sử dụng auto để thanh cuộn chỉ hiển thị khi cần thiết
           overflow: "auto", // Thay đổi từ overlay sang auto để tương thích tốt hơn
-    
+
           // Ẩn thanh cuộn mặc định
           "&::-webkit-scrollbar": {
             width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
             height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
           },
-    
+
           "&::-webkit-scrollbar-thumb": {
             backgroundColor: "#686868",
             borderRadius: "50px",
             backgroundImage: "#1E1E1E",
           },
-    
+          "& .MuiDialogContent-root": {
+            overflow: "auto",
+            "&::-webkit-scrollbar": {
+              width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
+              height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
+            },
+            // Ẩn thanh cuộn mặc định
+            "&::-webkit-scrollbar": {
+              width: "5px", // Đặt độ rộng của thanh cuộn nhỏ lại để không chiếm diện tích nhiều
+              height: "5px", // Đặt độ cao của thanh cuộn nhỏ lại
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#d66efd",
+              borderRadius: "50px",
+              backgroundImage: "#242526",
+            },
+          },
         },
       },
     },
-    
   },
 });
 

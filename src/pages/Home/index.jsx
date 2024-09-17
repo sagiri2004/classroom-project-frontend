@@ -1,10 +1,10 @@
-import SelectTheme from "~/components/selectTheme";
+import { Box } from "@mui/material";
 
 function Home() {
   return (
-    <h2>
-      Home page <SelectTheme />
-    </h2>
+    <Box>
+      <h1>Home Page</h1>
+    </Box>
   );
 }
 
