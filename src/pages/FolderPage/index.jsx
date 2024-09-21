@@ -49,7 +49,11 @@ function FolderPage() {
             alignItems: "center",
           }}
         >
-          <AlertDialog />
+          <AlertDialog
+            currentFLashcardSet={flashcardSets?.map(
+              (flashcardSet) => flashcardSet.flashcardSetId
+            )}
+          />
           <Tooltip title="Delete folder">
             <IconButton>
               <DeleteIcon

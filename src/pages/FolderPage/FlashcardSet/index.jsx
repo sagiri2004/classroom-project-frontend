@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import StyleIcon from "@mui/icons-material/Style";
 
 function FlashcardSet({
   title,
@@ -45,26 +46,47 @@ function FlashcardSet({
         },
       }}
     >
-      <Box
-        onClick={handleClickFlashcardSet}
-        sx={{
-          flex: 1,
+      <Box sx={{
+        display: "flex",
+        gap: 4,
+        alignItems: "center",
+      }}>
+        <Box sx={{
           display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Box display="flex" gap={2} alignItems="center">
-          {/* <Typography variant="subtitle1">{count} terms</Typography>
-          <Divider orientation="vertical" flexItem /> */}
-          <Avatar
-            alt={authorName}
-            src={authorAvatar}
-            sx={{ width: 24, height: 24 }}
+          justifyContent: "center",
+          alignItems: "center",
+          width: 40,
+          height: 40,
+          borderRadius: "8px",
+          backgroundColor: "primary.dark",
+        }}>
+          <StyleIcon fontSize="large" 
+            sx={{
+              color: "#fff",
+            }}
           />
-          <Typography variant="subtitle1">{authorName}</Typography>
         </Box>
-        <Box display="flex" gap={2} alignItems="center">
-          <Typography variant="h6">{title}</Typography>
+        <Box
+          onClick={handleClickFlashcardSet}
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box display="flex" gap={2} alignItems="center">
+            {/* <Typography variant="subtitle1">{count} terms</Typography>
+          <Divider orientation="vertical" flexItem /> */}
+            <Avatar
+              alt={authorName}
+              src={authorAvatar}
+              sx={{ width: 24, height: 24 }}
+            />
+            <Typography variant="subtitle1">{authorName}</Typography>
+          </Box>
+          <Box display="flex" gap={2} alignItems="center">
+            <Typography variant="h6">{title}</Typography>
+          </Box>
         </Box>
       </Box>
       <Box>

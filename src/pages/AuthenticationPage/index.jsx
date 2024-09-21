@@ -2,7 +2,7 @@ import styles from "./Authentication.module.scss";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
@@ -31,17 +31,20 @@ function AuthenticationPage() {
 
   return (
     <div className={styles.wrapper}>
-      <Link to="/" className={styles.back}>
+      <div className={styles.back}>
         <Button
           variant="text"
           startIcon={<FirstPageIcon />}
           sx={{
             textTransform: "none",
           }}
+          onClick={() => 
+            window.history.pushState({}, "", "/")
+          }
         >
           Back to Home
         </Button>
-      </Link>
+      </div>
       <div className={styles.container}>
         {/* Animated image container */}
         <motion.div

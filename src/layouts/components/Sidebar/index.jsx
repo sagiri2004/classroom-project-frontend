@@ -121,19 +121,32 @@ export default function MiniDrawer() {
         {["Home", "Library", "Class"].map((text, index) => (
           <ListItem key={text} disablePadding sx={{ display: "block" }}>
             <ListItemButton>
-              <ListItemIcon>
-                {index === 0 && <HomeIcon 
-                  color={currentUrl === "/" ? "primary" : "inherit"}
-                  onClick={() => handleListItemClick("/")}
-                />}
-                {index === 1 && <FolderSharedIcon
-                  color={currentUrl === "/library" ? "primary" : "inherit"}
-                  onClick={() => handleListItemClick("/library")}
-                 />}
-                {index === 2 && <SchoolIcon
-                  color={currentUrl === "/class" ? "primary" : "inherit"}
-                  onClick={() => handleListItemClick("/class")}
-                 />}
+              <ListItemIcon
+                onClick={() => {
+                  if (index === 0) {
+                    handleListItemClick("/");
+                  } else if (index === 1) {
+                    handleListItemClick("/library");
+                  } else if (index === 2) {
+                    handleListItemClick("/class");
+                  }
+                }}
+              >
+                {index === 0 && (
+                  <HomeIcon
+                    color={currentUrl === "/" ? "primary" : "inherit"}
+                  />
+                )}
+                {index === 1 && (
+                  <FolderSharedIcon
+                    color={currentUrl === "/library" ? "primary" : "inherit"}
+                  />
+                )}
+                {index === 2 && (
+                  <SchoolIcon
+                    color={currentUrl === "/class" ? "primary" : "inherit"}
+                  />
+                )}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>

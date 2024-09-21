@@ -1,4 +1,6 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import apiClient from "~/api/apiClient";
 import {
   Box,
   Button,
@@ -8,6 +10,9 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,13 +20,28 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import CommentIcon from "@mui/icons-material/Comment";
 
 import AddBoxIcon from "@mui/icons-material/AddBox";
 
-const AlertDialog = forwardRef((props, ref) => {
+const AlertDialog = forwardRef((currentFLashcardSet, ref) => {
   const [open, setOpen] = useState(false);
-  const [checked, setChecked] = useState([0]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [checked, setChecked] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [flashcardSets, setFlashcardSets] = useState([]);
+
+  useEffect(() => {
+    if (!open) return;
+    apiClient.get("/library/my-flashcard-sets").then((response) => {
+      const { data } = response.data;
+      setFlashcardSets(data);
+      setIsLoading(false);
+    });
+    // set checked
+    currentFLashcardSet.currentFLashcardSet.map((flashcardSet) => {
+      setChecked((prev) => [...prev, flashcardSet]);
+    });
+  }, [open]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -44,6 +64,35 @@ const AlertDialog = forwardRef((props, ref) => {
     setOpen(false);
   };
 
+  const folderId = useParams().id;
+
+  const handleAdd = async() => {
+    // call api
+    await apiClient.put(`/library/folder/${currentFLashcardSet.id}`, {
+      folderId: folderId,
+      flashcardSetIds: checked,
+    });
+    setOpenSnackbar(true);
+    setOpen(false);
+    // reload page
+    window.location.reload();
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  // neu dong thi xoa toan bo state
+  useEffect(() => {
+    if (!open) {
+      setChecked([]);
+    }
+  }, [open]);
+
   return (
     <Box ref={ref}>
       <IconButton onClick={handleClickOpen}>
@@ -59,58 +108,68 @@ const AlertDialog = forwardRef((props, ref) => {
       >
         <DialogTitle id="scroll-dialog-title">Add Flashcard Set</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
-          <DialogContentText
-            id="scroll-dialog-description"
-            tabIndex={-1}
-          >
-            <List sx={{ width: "100%", height: "70%" }}>
-              {[
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                18, 19, 20, 21, 22,
-              ].map((value) => {
-                const labelId = `checkbox-list-label-${value}`;
-
-                return (
-                  <ListItem
-                    key={value}
-                    secondaryAction={
-                      <IconButton edge="end" aria-label="comments">
-                        <CommentIcon />
-                      </IconButton>
-                    }
-                    disablePadding
-                  >
-                    <ListItemButton
-                      role={undefined}
-                      onClick={handleToggle(value)}
-                      dense
-                    >
-                      <ListItemIcon>
-                        <Checkbox
-                          edge="start"
-                          checked={checked.indexOf(value) !== -1}
-                          tabIndex={-1}
-                          disableRipple
-                          inputProps={{ "aria-labelledby": labelId }}
+          {isLoading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="70vh"
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box id="scroll-dialog-description" tabIndex={-1}>
+              <List sx={{ width: "100%", height: "70%" }}>
+                {flashcardSets.map((flashcardSet) => {
+                  const labelId = `checkbox-list-label-${flashcardSet.id}`;
+                  return (
+                    <ListItem key={flashcardSet.id} disablePadding>
+                      <ListItemButton
+                        role={undefined}
+                        onClick={handleToggle(flashcardSet.id)}
+                        dense
+                      >
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(flashcardSet.id) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ "aria-labelledby": labelId }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          id={labelId}
+                          primary={flashcardSet.title}
                         />
-                      </ListItemIcon>
-                      <ListItemText
-                        id={labelId}
-                        primary={`Line item ${value + 1}`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </DialogContentText>
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+          )}
         </DialogContent>
 
         <DialogActions id="scroll-dialog-description">
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Add</Button>
+          <Button onClick={handleAdd}>Add</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          This is a success Alert inside a Snackbar!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 });

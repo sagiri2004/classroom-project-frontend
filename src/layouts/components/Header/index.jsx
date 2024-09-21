@@ -476,7 +476,7 @@ function Header() {
 
       {/* Thông báo và tài khoản người dùng */}
 
-      {user ? (
+      {user.id ? (
         <Box
           sx={{
             display: "flex",
