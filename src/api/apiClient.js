@@ -3,7 +3,7 @@ import { store } from "~/redux/store";
 import { logoutUser, refreshToken } from "~/redux/authSlice"; // Import async thunks cho logout và refresh token
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:6969/api",
+  baseURL: "https://classroom-backend-project.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },

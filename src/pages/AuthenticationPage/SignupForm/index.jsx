@@ -55,6 +55,8 @@ function SignUpForm({ handleToggle }) {
     try {
       const result = await dispatch(registerUser(user));
 
+      console.log("Register result:", result);
+
       if (result) {
         navigate("/");
       }

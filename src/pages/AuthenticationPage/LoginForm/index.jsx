@@ -60,7 +60,7 @@ function LoginForm({ handleToggle }) {
     try {
       const result = await dispatch(loginUser(user));
 
-      console.log("Login result:", result);
+      // console.log("Login result:", result);
 
       if (loginUser.fulfilled.match(result)) {
         navigate("/");

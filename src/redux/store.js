@@ -1,7 +1,7 @@
 // app/store.js
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authSlice";
 import flashcardSetReducer from "./flashcardSetSlide"
+import authReducer from "./authSlice"
 
 import {
   persistStore,
